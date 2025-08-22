@@ -50,6 +50,23 @@ pub trait MerkleHasher {
     fn hash(data: &[u8]) -> Hash;
 }
 
+/// Leaf hash with domain separation: `H(0x00 || message)`.
+pub fn leaf_hash<H: MerkleHasher>(msg: &[u8]) -> Hash {
+    let mut buf = Vec::with_capacity(1 + msg.len());
+    buf.push(0x00);
+    buf.extend_from_slice(msg);
+    H::hash(&buf)
+}
+
+/// Node hash with domain separation: `H(0x01 || left || right)`.
+pub fn node_hash<H: MerkleHasher>(left: &Hash, right: &Hash) -> Hash {
+    let mut buf = [0u8; 1 + 32 + 32]; // input size fixed
+    buf[0] = 0x01;
+    buf[1..33].copy_from_slice(&left.0);
+    buf[33..].copy_from_slice(&right.0);
+    H::hash(&buf)
+}
+
 pub struct Sha3;
 impl MerkleHasher for Sha3 {
     const NAME: &'static str = "sha3-256";
