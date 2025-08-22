@@ -7,6 +7,8 @@ pub enum MerkleError {
     EmptyLeaves,
     IndexOutOfBounds,
 }
+
+#[derive(Debug)]
 pub struct MerkleTree<H: MerkleHasher> {
     levels: Vec<Vec<Hash>>,
     _marker: PhantomData<H>,
