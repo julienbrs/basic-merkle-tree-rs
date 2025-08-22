@@ -1,5 +1,5 @@
-use basic_merkle_tree_rs::hash::{MerkleHasher, Sha3, leaf_hash};
-use basic_merkle_tree_rs::tree::MerkleTree;
+use merkle_bench_rs::hash::{MerkleHasher, Sha3, leaf_hash};
+use merkle_bench_rs::tree::MerkleTree;
 use std::time::Instant;
 
 fn main() {

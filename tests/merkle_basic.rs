@@ -1,4 +1,4 @@
-use basic_merkle_tree_rs::{
+use merkle_bench_rs::{
     hash::{Sha3, leaf_hash, node_hash},
     tree::{MerkleError, MerkleTree},
 };

@@ -65,6 +65,26 @@ pub fn node_hash<H: MerkleHasher>(left: &Hash, right: &Hash) -> Hash {
     H::hash(&buf)
 }
 
+/// BLAKE2b-256 hasher.
+#[cfg(feature = "blake2")]
+#[derive(Debug)]
+pub struct Blake2b;
+
+#[cfg(feature = "blake2")]
+impl MerkleHasher for Blake2b {
+    const NAME: &'static str = "blake2b-256";
+    fn hash(data: &[u8]) -> Hash {
+        use blake2::Blake2bVar;
+        use blake2::digest::{Update, VariableOutput};
+
+        let mut h = Blake2bVar::new(32).expect("len");
+        h.update(data);
+        let mut out = [0u8; 32];
+        h.finalize_variable(&mut out).unwrap();
+        Hash(out)
+    }
+}
+
 /// SHA3-256 hasher (default feature).
 #[cfg(feature = "sha3")]
 #[derive(Debug)]
@@ -98,5 +118,24 @@ impl MerkleHasher for Keccak {
         let mut out = [0u8; 32];
         k.finalize(&mut out);
         Hash(out)
+    }
+}
+
+/// SHA2-256 hasher.
+#[cfg(feature = "sha2")]
+#[derive(Debug)]
+pub struct Sha2;
+
+#[cfg(feature = "sha2")]
+impl MerkleHasher for Sha2 {
+    const NAME: &'static str = "sha2-256";
+    fn hash(data: &[u8]) -> Hash {
+        use sha2::{Digest, Sha256};
+        let mut hasher = Sha256::new();
+        hasher.update(data);
+        let out = hasher.finalize();
+        let mut a = [0u8; 32];
+        a.copy_from_slice(&out);
+        Hash(a)
     }
 }

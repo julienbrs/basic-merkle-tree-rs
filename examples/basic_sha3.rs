@@ -1,5 +1,5 @@
-use basic_merkle_tree_rs::hash::{Sha3, leaf_hash};
-use basic_merkle_tree_rs::tree::MerkleTree;
+use merkle_bench_rs::hash::{Sha3, leaf_hash};
+use merkle_bench_rs::tree::MerkleTree;
 fn main() {
     let msgs = [b"block 1", b"block 2", b"block 3", b"block 4"];
     let leaves = msgs

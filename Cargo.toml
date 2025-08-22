@@ -1,18 +1,24 @@
 [package]
-name = "basic-merkle-tree-rs"
+name = "merkle_bench_rs"
 version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-criterion = "0.7.0"
-sha3 = { version = "0.10.8", optional = true }
-tiny-keccak = { version = "2.0.2", features = ["keccak"], optional = true }
+sha3         = { version = "0.10.8", optional = true }
+tiny-keccak  = { version = "2.0.2", features = ["keccak"], optional = true }
+sha2         = { version = "0.10", optional = true }
+blake2       = { version = "0.10", optional = true }
+
+[dev-dependencies]
+criterion    = "0.7"
 
 [features]
-default = ["sha3"]
-sha3   = ["dep:sha3"]
-keccak = ["dep:tiny-keccak"]
-all-hashers = ["sha3", "keccak"]
+default      = ["sha3"]
+sha3         = ["dep:sha3"]
+keccak       = ["dep:tiny-keccak"]
+sha2         = ["dep:sha2"]
+blake2       = ["dep:blake2"]
+all-hashers  = ["sha3", "keccak", "sha2", "blake2"]
 
 [[bench]]
 name = "algos"
