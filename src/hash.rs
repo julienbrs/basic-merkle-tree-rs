@@ -1,7 +1,5 @@
 use core::fmt::{self, Write};
 
-use sha3::{Digest, Sha3_256};
-
 /// 32-byte hash type.
 const HASH_SIZE: usize = 32;
 
@@ -67,14 +65,38 @@ pub fn node_hash<H: MerkleHasher>(left: &Hash, right: &Hash) -> Hash {
     H::hash(&buf)
 }
 
+/// SHA3-256 hasher (default feature).
+#[cfg(feature = "sha3")]
+#[derive(Debug)]
 pub struct Sha3;
+#[cfg(feature = "sha3")]
 impl MerkleHasher for Sha3 {
     const NAME: &'static str = "sha3-256";
-
     fn hash(data: &[u8]) -> Hash {
+        use sha3::{Digest, Sha3_256};
         let mut hasher = Sha3_256::new();
         hasher.update(data);
-        let output = hasher.finalize();
-        Hash(output.into())
+        let out = hasher.finalize();
+        let mut a = [0u8; 32];
+        a.copy_from_slice(&out);
+        Hash(a)
+    }
+}
+
+/// Keccak-256 hasher (opt-in).
+#[cfg(feature = "keccak")]
+#[derive(Debug)]
+pub struct Keccak;
+
+#[cfg(feature = "keccak")]
+impl MerkleHasher for Keccak {
+    const NAME: &'static str = "keccak-256";
+    fn hash(data: &[u8]) -> Hash {
+        use tiny_keccak::{Hasher, Keccak};
+        let mut k = Keccak::v256();
+        k.update(data);
+        let mut out = [0u8; 32];
+        k.finalize(&mut out);
+        Hash(out)
     }
 }
