@@ -59,7 +59,7 @@ impl<H: MerkleHasher> MerkleTree<H> {
         let original_index = index;
 
         let leaves_len = self.leaf_len();
-        if index > leaves_len {
+        if index >= leaves_len {
             return Err(MerkleError::IndexOutOfBounds);
         }
 

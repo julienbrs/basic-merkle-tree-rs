@@ -58,7 +58,7 @@ pub fn leaf_hash<H: MerkleHasher>(msg: &[u8]) -> Hash {
 
 /// Node hash with domain separation: `H(0x01 || left || right)`.
 pub fn node_hash<H: MerkleHasher>(left: &Hash, right: &Hash) -> Hash {
-    let mut buf = [0u8; 1 + 32 + 32]; // input size fixed
+    let mut buf = [0u8; 1 + HASH_SIZE * 2]; // input size fixed
     buf[0] = 0x01;
     buf[1..33].copy_from_slice(&left.0);
     buf[33..].copy_from_slice(&right.0);
